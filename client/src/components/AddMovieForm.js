@@ -4,48 +4,47 @@ import { Link } from "react-router-dom";
 
 import axios from "axios";
 
-const EditMovieForm = (props) => {
-  const { push } = useHistory();
+const AddMovieForm = (props) => {
   const { id } = useParams();
+  const { push } = useHistory();
 
-  const [movie, setMovie] = useState({
+  const initialValues = {
+    id: Date.now(),
     title: "",
     director: "",
     genre: "",
     metascore: 0,
     description: "",
-  });
+  };
+
+  const [movie, setMovie] = useState(initialValues);
 
   const handleChange = (e) => {
     setMovie({
       ...movie,
       [e.target.name]: e.target.value,
     });
+    console.log(e.target.name, e.target.value);
+    console.log(movie);
+  };
+
+  const formReset = () => {
+    setMovie(initialValues);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://localhost:5000/api/movies/${id}`, movie)
-      .then((response) => {
-        props.setMovie(response.data);
+      .post(`http://localhost:5000/api/movies`, movie)
+      .then((res) => {
+        console.log(res.data);
+        props.setMovie(res.data, { id: Date.now() });
         push(`/api/movies/${id}`);
       })
-      .catch((error) => {
-        console.log(error.response);
+      .catch((err) => {
+        console.log(err.response);
       });
   };
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/movies/${id}`)
-      .then((response) => {
-        setMovie(response.data);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-  }, []);
 
   return (
     <div className="col">
@@ -53,7 +52,7 @@ const EditMovieForm = (props) => {
         <form onSubmit={handleSubmit}>
           <div className="modal-header">
             <h4 className="modal-title">
-              Editing <strong>{movie.title}</strong>
+              Add New Movie <strong>{movie.title}</strong>
             </h4>
           </div>
           <div className="modal-body">
@@ -109,7 +108,7 @@ const EditMovieForm = (props) => {
           </div>
           <div className="modal-footer">
             <input type="submit" className="btn btn-info" value="Save" />
-            <Link to={`/movies/${id}`}>
+            <Link to={`/movies/`}>
               <input type="button" className="btn btn-default" value="Cancel" />
             </Link>
           </div>
@@ -119,4 +118,4 @@ const EditMovieForm = (props) => {
   );
 };
 
-export default EditMovieForm;
+export default AddMovieForm;

@@ -6,7 +6,7 @@ import Movie from "./components/Movie";
 
 import MovieHeader from "./components/MovieHeader";
 import DeleteMovieModal from "./components/DeleteMovieModal";
-import AddMovie from "./components/AddMovie";
+import AddMovieForm from "./components/AddMovieForm";
 import EditMovieForm from "./components/EditMovieForm";
 import FavoriteMovieList from "./components/FavoriteMovieList";
 
@@ -39,15 +39,16 @@ const App = (props) => {
         return movie;
       }
     });
-
-    const checkIfMovieIsThere = favoriteMovies.find((favoriteMovie) => {
-      if (favoriteMovie.id == id) {
-        return favoriteMovie;
+    const checkIfExist = favoriteMovies.find((favMovie) => {
+      if (favMovie.id == id) {
+        return favMovie;
       }
     });
+    console.log(newFavorite);
+    console.log(checkIfExist);
 
-    setFavoiteMovies(
-      JSON.stringify(checkIfMovieIsThere) === JSON.stringify(newFavorite)
+    setFavoriteMovies(
+      JSON.stringify(checkIfExist) === JSON.stringify(newFavorite)
         ? [...favoriteMovies]
         : [...favoriteMovies, newFavorite]
     );
@@ -80,7 +81,7 @@ const App = (props) => {
             </Route>
 
             <Route path="/movies/add">
-              <AddMovie setMovie={setMovies} />
+              <AddMovieForm setMovie={setMovies} />
             </Route>
 
             <Route path="/movies/:id">
